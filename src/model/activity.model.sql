@@ -1,0 +1,12 @@
+CREATE TABLE IF NOT EXISTS activities (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED,
+    activity VARCHAR(255) NOT NULL,
+    metric FLOAT(4) NOT NULL,
+    metric_type VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id)
+        REFERENCES users (id)
+        ON UPDATE CASCADE ON DELETE CASCADE
+)

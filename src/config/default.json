@@ -1,0 +1,10 @@
+{
+  "port": "3000",
+  "db": {
+    "host": "localhost",
+    "user": "headless",
+    "password": "__INSERT__",
+    "database": "actrac",
+    "multipleStatements": true
+  }
+}
