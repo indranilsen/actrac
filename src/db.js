@@ -69,7 +69,7 @@ const DB = {
             })
             .then(validateTables)
             .catch((err) => {
-                console.log(`Could not connect to DB: ${err}`);
+                return Promise.reject(err.message);
             });
     },
 

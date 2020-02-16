@@ -23,11 +23,14 @@ const cleanGetResults = (records) => {
                 value = value === 1;
             }
 
+            let date = new Date(record.created_at);
+            let dateString = `${date.toTimeString()}, ${date.toDateString()}`;
+
             users.push({
                 activity: record.activity,
                 metric: value,
                 metricType: record.metric_type,
-                time: new Date(record.created_at),
+                time: dateString,
             })
         });
     }
@@ -56,7 +59,7 @@ const ActivityService = {
                     throw new Error('User does not exist');
                 }
 
-                let query = 'SELECT activity, metric, metric_type FROM activities WHERE user_id = ?';
+                let query = 'SELECT activity, metric, metric_type, created_at FROM activities WHERE user_id = ?';
                 return DB.query(query, [userId])
                     .then(cleanGetResults)
                     .catch(() => {

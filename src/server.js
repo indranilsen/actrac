@@ -4,7 +4,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const config = require('nconf')
-    .env({ lowerCase: true })
+    .env({
+        lowerCase: true,
+        separator: '__',
+    })
     .argv()
     .file('local', { file: `./src/config/local.json` })
     .file('defaults', { file: `./src/config/default.json` });
