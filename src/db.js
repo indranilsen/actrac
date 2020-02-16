@@ -75,7 +75,7 @@ const DB = {
 
     close: () => {
         return new Promise((resolve, reject) => {
-            this.connection.end(err => {
+            DB.connection.end(err => {
                 if (err)
                     return reject( err );
                 resolve();
