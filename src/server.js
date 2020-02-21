@@ -31,11 +31,3 @@ DB.initialize(config.get('db'))
     .catch((err) => {
         console.log(`Failed to start application: ${err}`);
     });
-
-process.on('SIGINT', () => {
-    return DB.close().then(process.exit);
-});
-
-process.on('SIGTERM', () => {
-    return DB.close().then(process.exit);
-});

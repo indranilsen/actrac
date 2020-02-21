@@ -39,32 +39,21 @@ const cleanGetResults = (records) => {
 };
 
 const ActivityService = {
-    addActivity: (firstName, lastName, activity, metric, metricType) => {
-        return UserService.getIdFromName(firstName, lastName)
-            .then((userId) => {
-                let query = 'INSERT INTO activities (user_id, activity, metric, metric_type) VALUES (?,?,?,?)';
-
-                return DB.query(query, [userId, activity, metric, metricType])
-                    .then(cleanCreateResult)
-                    .catch(() => {
-                        throw new Error("Could not add new activity");
-                    });
+    addActivity: (userId, activity, metric, metricType) => {
+        let query = 'INSERT INTO activities (user_id, activity, metric, metric_type) VALUES (?,?,?,?)';
+        return DB.query(query, [userId, activity, metric, metricType])
+            .then(cleanCreateResult)
+            .catch(() => {
+                throw new Error("Could not add new activity");
             });
     },
 
-    getActivities: (firstName, lastName) => {
-        return UserService.getIdFromName(firstName, lastName)
-            .then((userId) => {
-                if (_.isNull(userId)) {
-                    throw new Error('User does not exist');
-                }
-
-                let query = 'SELECT activity, metric, metric_type, created_at FROM activities WHERE user_id = ?';
-                return DB.query(query, [userId])
-                    .then(cleanGetResults)
-                    .catch(() => {
-                        throw new Error('Could not retrieve user activities');
-                    });
+    getActivities: (userId) => {
+        let query = 'SELECT activity, metric, metric_type, created_at FROM activities WHERE user_id = ?';
+        return DB.query(query, [userId])
+            .then(cleanGetResults)
+            .catch(() => {
+                throw new Error('Could not retrieve user activities');
             });
     }
 };
