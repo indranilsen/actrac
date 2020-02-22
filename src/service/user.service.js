@@ -12,14 +12,28 @@ const cleanCreateResult = (record) => {
 
 const cleanGetResults = (records) => {
     let users = [];
-    records.forEach(record => {
-       users.push({
-           id: record.id,
-           firstName: record.first_name,
-           lastName: record.last_name,
-           email: record.email
-       })
+    let userActivities = _.groupBy(records, 'id');
+    _.forEach(userActivities, (activityList) => {
+        let firstName = _.first(activityList)['first_name'];
+        let lastName = _.first(activityList)['last_name'];
+
+        let activities = [];
+        _.forEach(activityList, (activityRecord) => {
+            if (!_.isNull(activityRecord['activity'])) {
+                activities.push({
+                    activity: activityRecord['activity'],
+                    count: activityRecord['count']
+                })
+            }
+        });
+
+        users.push({
+            firstName: firstName,
+            lastName: lastName,
+            activities: activities
+        })
     });
+
     return users;
 };
 
@@ -40,7 +54,29 @@ const UserService = {
     },
 
     getUsers: () => {
-        let query = 'SELECT first_name, last_name, email FROM users';
+        let query = `SELECT
+          users.id,
+          users.first_name,
+          users.last_name,
+          agg.activity,
+          agg.count
+        FROM
+          users
+          LEFT OUTER JOIN (
+            SELECT
+              user_id,
+              activity,
+              sum(metric) as count
+            FROM
+              activities
+            WHERE metric_type = "count"
+            GROUP BY
+              activity,
+              user_id
+            ORDER BY
+              user_id
+          ) AS agg ON users.id = agg.user_id`;
+
         return DB.query(query)
             .then(cleanGetResults)
             .catch(() => {
